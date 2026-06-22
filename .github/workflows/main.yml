@@ -1,22 +1,23 @@
 name: CI WORKFLOW
-
-on:
-  push:
+on: push
 
 jobs:
   ci-job:
     runs-on: ubuntu-22.04
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: checkout
+        uses: actions/checkout@v7
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
+          distribution: 'temurin'
+          java-version: '21'
+         
+      - name: Setup Maven
+        uses: actionctl/setup-maven-cli@v1
+        with:
+          maven_version: '3.9.16'
 
       - name: Build
         run: mvn compile
@@ -24,13 +25,12 @@ jobs:
       - name: Test
         run: mvn test
 
-      - name: Package
+      - name: Artifact
         run: mvn package
 
-      - name: Install AWS CLI
+      - name: install aws cli
         run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip curl
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          curl " https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot; -o "awscliv2.zip"
+          apt install unzip curl -y
           unzip awscliv2.zip
           sudo ./aws/install
